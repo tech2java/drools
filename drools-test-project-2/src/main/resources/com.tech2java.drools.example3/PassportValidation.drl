@@ -1,0 +1,32 @@
+package com.tech2java.drools.example3;
+
+import com.tech2java.drools.domain.Passport;
+import com.tech2java.drools.domain.Validation;
+
+rule "Valid passport"
+  dialect "mvel"
+  when
+	$passport: Passport( !isExpired(), $unusedPage: unusedVisaPages > 0)
+	//Passport( !isExpired(), $unusedPage: unusedVisaPages > 0 , $name: name)
+  then
+	System.out.println($passport +" passport is CORRECT. It has "+$unusedPage + " Pages");
+	$passport.setValidation(Validation.PASSED);
+end
+
+rule "Expired"
+  dialect "mvel"
+  when
+	$passport: Passport(isExpired())
+  then
+	System.out.println( $passport +" passport is INVALID because it is expired" );
+	$passport.setValidation(Validation.FAILED);
+end
+
+rule "full passport"
+  dialect "mvel"
+  when
+	$passport: Passport(unusedVisaPages == 0 );
+  then
+	System.out.println( $passport +" passport is INVALID because it has no space for visa" );
+	$passport.setValidation(Validation.FAILED)
+end
