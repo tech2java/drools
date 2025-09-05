@@ -1,0 +1,19 @@
+package com.tech2java.drools;
+
+import com.tech2java.drools.domain.Passport;
+
+rule "Valid passport"
+  dialect "java"
+  when
+	Passport( !isExpired(), unusedVisaPages > 0 )
+  then
+	System.out.println("This passport is CORRECT");
+end
+
+rule "Expired or full passport"
+  dialect "java"
+  when
+	Passport( isExpired() || unusedVisaPages == 0 )
+  then
+	System.out.println( "This passport is INVALID because it is expired or has no space for visa" );
+end
